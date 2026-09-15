@@ -118,6 +118,8 @@ import static io.milvus.common.utils.RedactCredential.redactUriUserInfo;
  * rename, truncate, or schema alteration, must not run concurrently with DML or DQL operations on the affected
  * database or collection. Serialize these operations to avoid undefined ordering and unexpected results.
  */
+
+
 public class MilvusClientV2 {
     private static final Logger logger = LoggerFactory.getLogger(MilvusClientV2.class);
     private ManagedChannel channel;
@@ -145,6 +147,8 @@ public class MilvusClientV2 {
      *
      * @param connectConfig Milvus server connection configuration
      */
+    
+
     public MilvusClientV2(ConnectConfig connectConfig) {
         if (connectConfig != null) {
             connect(connectConfig);
@@ -159,6 +163,8 @@ public class MilvusClientV2 {
      *
      * @param blockingStub the blocking gRPC stub
      */
+    
+
     public void setBlockingStub(MilvusServiceGrpc.MilvusServiceBlockingStub blockingStub) {
         this.blockingStub = blockingStub;
     }
@@ -169,6 +175,8 @@ public class MilvusClientV2 {
      *
      * @param futureStub the future gRPC stub
      */
+    
+
     public void setFutureStub(MilvusServiceGrpc.MilvusServiceFutureStub futureStub) {
         this.futureStub = futureStub;
     }
@@ -296,6 +304,8 @@ public class MilvusClientV2 {
     }
 
     /** Starts a telemetry manager whose worker was intentionally deferred during connection setup. */
+    
+
     public void startTelemetry() {
         ClientTelemetryManager manager = getTelemetry();
         if (manager != null) {
@@ -454,6 +464,8 @@ public class MilvusClientV2 {
      *
      * @param retryConfig the retry configuration
      */
+    
+
     public void retryConfig(RetryConfig retryConfig) {
         rpcUtils.retryConfig(retryConfig);
     }
@@ -464,6 +476,8 @@ public class MilvusClientV2 {
      * @param retryConfig the retry configuration
      * @return this client
      */
+    
+
     public MilvusClientV2 withRetry(RetryConfig retryConfig) {
         rpcUtils.retryConfig(retryConfig);
         return this;
@@ -477,6 +491,8 @@ public class MilvusClientV2 {
      * @param timeoutUnit the unit of the timeout value
      * @return this client
      */
+    
+
     public MilvusClientV2 withTimeout(long timeout, TimeUnit timeoutUnit) {
         // the unit of rpcDeadlineMs is millisecond
         // if the input timeout value is zero, rpcDeadlineMs is zero
@@ -494,6 +510,8 @@ public class MilvusClientV2 {
      *
      * @return the current database name
      */
+    
+
     public String currentUsedDatabase() {
         String dbName = this.connectConfig.getDbName();
         if (StringUtils.isEmpty(dbName)) {
@@ -506,7 +524,13 @@ public class MilvusClientV2 {
         return connectConfig == null ? null : connectConfig.getDbName();
     }
 
-    /** Returns the telemetry manager for metrics inspection and custom command handlers. */
+    /**
+     * Returns the telemetry manager for metrics inspection and custom command handlers.
+     *
+     * @return the telemetry manager
+     */
+    
+
     public ClientTelemetryManager getTelemetry() {
         if (globalStub != null) {
             MilvusClientV2 primaryClient = globalStub.getPrimaryClient();
@@ -536,6 +560,8 @@ public class MilvusClientV2 {
      * @param clusterId the cluster ID to bind the session to
      * @return a new session bound to the given cluster
      */
+    
+
     public MilvusClientV2Session session(String clusterId) {
         if (StringUtils.isEmpty(clusterId)) {
             throw new MilvusClientException(ErrorCode.INVALID_PARAMS, "clusterId cannot be null or empty");
@@ -552,6 +578,7 @@ public class MilvusClientV2 {
      *
      * @param dbName databaseName
      */
+    
     public void useDatabase(String dbName) throws InterruptedException {
         if (dbName == null) {
             throw new IllegalArgumentException("dbName cannot be null");
@@ -719,6 +746,8 @@ public class MilvusClientV2 {
      *
      * @param request create database request
      */
+    
+
     public void createDatabase(CreateDatabaseReq request) {
         rpcUtils.retry(() -> databaseService.createDatabase(this.getRpcStub(), request));
     }
@@ -728,6 +757,8 @@ public class MilvusClientV2 {
      *
      * @param request drop database request
      */
+    
+
     public void dropDatabase(DropDatabaseReq request) {
         rpcUtils.retry(() -> databaseService.dropDatabase(this.getRpcStub(), request));
     }
@@ -737,6 +768,8 @@ public class MilvusClientV2 {
      *
      * @return List of String database names
      */
+    
+
     public ListDatabasesResp listDatabases() {
         return rpcUtils.retry(() -> databaseService.listDatabases(this.getRpcStub()));
     }
@@ -760,6 +793,8 @@ public class MilvusClientV2 {
      *
      * @param request alter database properties request
      */
+    
+
     public void alterDatabaseProperties(AlterDatabasePropertiesReq request) {
         rpcUtils.retry(() -> databaseService.alterDatabaseProperties(this.getRpcStub(), request));
     }
@@ -769,6 +804,8 @@ public class MilvusClientV2 {
      *
      * @param request alter database properties request
      */
+    
+
     public void dropDatabaseProperties(DropDatabasePropertiesReq request) {
         rpcUtils.retry(() -> databaseService.dropDatabaseProperties(this.getRpcStub(), request));
     }
@@ -779,6 +816,8 @@ public class MilvusClientV2 {
      * @param request describe database request
      * @return DescribeDatabaseResp
      */
+    
+
     public DescribeDatabaseResp describeDatabase(DescribeDatabaseReq request) {
         return rpcUtils.retry(() -> databaseService.describeDatabase(this.getRpcStub(), request));
     }
@@ -791,6 +830,7 @@ public class MilvusClientV2 {
      *
      * @param request create collection request
      */
+    
     public void createCollection(CreateCollectionReq request) {
         rpcUtils.retry(() -> collectionService.createCollection(this.getRpcStub(), request));
     }
@@ -810,6 +850,8 @@ public class MilvusClientV2 {
      *
      * @return CreateCollectionReq.CollectionSchema
      */
+    
+
     public static CreateCollectionReq.CollectionSchema CreateSchema() {
         return CollectionService.createSchema();
     }
@@ -819,6 +861,8 @@ public class MilvusClientV2 {
      *
      * @return List of String collection names
      */
+    
+
     public ListCollectionsResp listCollections() {
         return rpcUtils.retry(() -> collectionService.listCollections(this.getRpcStub(), ""));
     }
@@ -828,8 +872,11 @@ public class MilvusClientV2 {
      * Note: the old API listCollections() doesn't have a ListCollectionsReq argument, we have to create
      * this new V2 API to avoid incompatible issue.
      *
+     * @param request list collections request
      * @return List of String collection names
      */
+    
+
     public ListCollectionsResp listCollectionsV2(ListCollectionsReq request) {
         return rpcUtils.retry(() -> collectionService.listCollections(this.getRpcStub(), request.getDatabaseName()));
     }
@@ -839,6 +886,8 @@ public class MilvusClientV2 {
      *
      * @param request drop collection request
      */
+    
+
     public void dropCollection(DropCollectionReq request) {
         rpcUtils.retry(() -> collectionService.dropCollection(this.getRpcStub(), request));
     }
@@ -848,6 +897,8 @@ public class MilvusClientV2 {
      *
      * @param request truncate collection request
      */
+    
+
     public void truncateCollection(TruncateCollectionReq request) {
         rpcUtils.retry(() -> collectionService.truncateCollection(this.getRpcStub(), request));
     }
@@ -872,6 +923,8 @@ public class MilvusClientV2 {
      *
      * @param request alter collection properties request
      */
+    
+
     public void alterCollectionProperties(AlterCollectionPropertiesReq request) {
         rpcUtils.retry(() -> collectionService.alterCollectionProperties(this.getRpcStub(), request));
     }
@@ -881,6 +934,8 @@ public class MilvusClientV2 {
      *
      * @param request add new field request
      */
+    
+
     public void addCollectionField(AddCollectionFieldReq request) {
         rpcUtils.retry(() -> collectionService.addCollectionField(this.getRpcStub(), request));
     }
@@ -890,6 +945,8 @@ public class MilvusClientV2 {
      *
      * @param request add new struct field request
      */
+    
+
     public void addCollectionStructField(AddCollectionStructFieldReq request) {
         rpcUtils.retry(() -> collectionService.addCollectionStructField(this.getRpcStub(), request));
     }
@@ -899,6 +956,8 @@ public class MilvusClientV2 {
      *
      * @param request alter field properties request
      */
+    
+
     public void alterCollectionField(AlterCollectionFieldReq request) {
         rpcUtils.retry(() -> collectionService.alterCollectionField(this.getRpcStub(), request));
     }
@@ -908,6 +967,8 @@ public class MilvusClientV2 {
      *
      * @param request drop field request
      */
+    
+
     public void dropCollectionField(DropCollectionFieldReq request) {
         rpcUtils.retry(() -> collectionService.dropCollectionField(this.getRpcStub(), request));
     }
@@ -917,6 +978,8 @@ public class MilvusClientV2 {
      *
      * @param request drop collection properties request
      */
+    
+
     public void dropCollectionProperties(DropCollectionPropertiesReq request) {
         rpcUtils.retry(() -> collectionService.dropCollectionProperties(this.getRpcStub(), request));
     }
@@ -926,6 +989,8 @@ public class MilvusClientV2 {
      *
      * @param request drop field properties request
      */
+    
+
     public void dropCollectionFieldProperties(DropCollectionFieldPropertiesReq request) {
         rpcUtils.retry(() -> collectionService.dropCollectionFieldProperties(this.getRpcStub(), request));
     }
@@ -936,6 +1001,8 @@ public class MilvusClientV2 {
      * @param request has collection request
      * @return Boolean
      */
+    
+
     public Boolean hasCollection(HasCollectionReq request) {
         return rpcUtils.retry(() -> collectionService.hasCollection(this.getRpcStub(), request));
     }
@@ -946,6 +1013,8 @@ public class MilvusClientV2 {
      * @param request describe collection request
      * @return DescribeCollectionResp
      */
+    
+
     public DescribeCollectionResp describeCollection(DescribeCollectionReq request) {
         return rpcUtils.retry(() -> collectionService.describeCollection(this.getRpcStub(), request));
     }
@@ -956,6 +1025,8 @@ public class MilvusClientV2 {
      * @param request describe collections request
      * @return {@code List<DescribeCollectionResp>}
      */
+    
+
     public List<DescribeCollectionResp> batchDescribeCollection(BatchDescribeCollectionReq request) {
         return rpcUtils.retry(() -> collectionService.batchDescribeCollections(this.getRpcStub(), request));
     }
@@ -966,6 +1037,8 @@ public class MilvusClientV2 {
      * @param request get collection stats request
      * @return GetCollectionStatsResp
      */
+    
+
     public GetCollectionStatsResp getCollectionStats(GetCollectionStatsReq request) {
         return rpcUtils.retry(() -> collectionService.getCollectionStats(this.getRpcStub(), request));
     }
@@ -975,6 +1048,8 @@ public class MilvusClientV2 {
      *
      * @param request rename collection request
      */
+    
+
     public void renameCollection(RenameCollectionReq request) {
         rpcUtils.retry(() -> collectionService.renameCollection(this.getRpcStub(), request));
     }
@@ -984,6 +1059,8 @@ public class MilvusClientV2 {
      *
      * @param request load collection request
      */
+    
+
     public void loadCollection(LoadCollectionReq request) {
         rpcUtils.retry(() -> collectionService.loadCollection(this.getRpcStub(), request));
     }
@@ -995,6 +1072,8 @@ public class MilvusClientV2 {
      *
      * @param request refresh load collection request
      */
+    
+
     public void refreshLoad(RefreshLoadReq request) {
         rpcUtils.retry(() -> collectionService.refreshLoad(this.getRpcStub(), request));
     }
@@ -1004,6 +1083,8 @@ public class MilvusClientV2 {
      *
      * @param request release collection request
      */
+    
+
     public void releaseCollection(ReleaseCollectionReq request) {
         rpcUtils.retry(() -> collectionService.releaseCollection(this.getRpcStub(), request));
     }
@@ -1014,6 +1095,8 @@ public class MilvusClientV2 {
      * @param request get load state request
      * @return Boolean
      */
+    
+
     public Boolean getLoadState(GetLoadStateReq request) {
         return rpcUtils.retry(() -> collectionService.getLoadState(this.getRpcStub(), request));
     }
@@ -1024,6 +1107,8 @@ public class MilvusClientV2 {
      * @param request get load state request
      * @return GetLoadStateResp
      */
+    
+
     public GetLoadStateResp getLoadStateV2(GetLoadStateReq request) {
         return rpcUtils.retry(() -> collectionService.getLoadStateV2(this.getRpcStub(), request));
     }
@@ -1032,7 +1117,10 @@ public class MilvusClientV2 {
      * Get information of all replicas from a collection.
      *
      * @param request describe replicas request
+     * @return the replica information of the collection
      */
+    
+
     public DescribeReplicasResp describeReplicas(DescribeReplicasReq request) {
         return rpcUtils.retry(() -> collectionService.describeReplicas(this.getRpcStub(), request));
     }
@@ -1045,6 +1133,8 @@ public class MilvusClientV2 {
      *
      * @param request add function request
      */
+    
+
     public void addCollectionFunction(AddCollectionFunctionReq request) {
         rpcUtils.retry(() -> collectionService.addCollectionFunction(this.getRpcStub(), request));
     }
@@ -1058,6 +1148,8 @@ public class MilvusClientV2 {
      *
      * @param request add function field request
      */
+    
+
     public void addFunctionField(AddFunctionFieldReq request) {
         rpcUtils.retry(() -> collectionService.addFunctionField(this.getRpcStub(), request));
     }
@@ -1067,6 +1159,8 @@ public class MilvusClientV2 {
      *
      * @param request alter function request
      */
+    
+
     public void alterCollectionFunction(AlterCollectionFunctionReq request) {
         rpcUtils.retry(() -> collectionService.alterCollectionFunction(this.getRpcStub(), request));
     }
@@ -1079,6 +1173,8 @@ public class MilvusClientV2 {
      *
      * @param request drop function request
      */
+    
+
     public void dropCollectionFunction(DropCollectionFunctionReq request) {
         rpcUtils.retry(() -> collectionService.dropCollectionFunction(this.getRpcStub(), request));
     }
@@ -1090,6 +1186,8 @@ public class MilvusClientV2 {
      *
      * @param request drop function field request
      */
+    
+
     public void dropFunctionField(DropFunctionFieldReq request) {
         rpcUtils.retry(() -> collectionService.dropFunctionField(this.getRpcStub(), request));
     }
@@ -1102,6 +1200,7 @@ public class MilvusClientV2 {
      *
      * @param request create index request
      */
+    
     public void createIndex(CreateIndexReq request) {
         rpcUtils.retry(() -> indexService.createIndex(this.getRpcStub(), request));
     }
@@ -1111,6 +1210,8 @@ public class MilvusClientV2 {
      *
      * @param request drop index request
      */
+    
+
     public void dropIndex(DropIndexReq request) {
         rpcUtils.retry(() -> indexService.dropIndex(this.getRpcStub(), request));
     }
@@ -1136,6 +1237,8 @@ public class MilvusClientV2 {
      *
      * @param request alter index request
      */
+    
+
     public void alterIndexProperties(AlterIndexPropertiesReq request) {
         rpcUtils.retry(() -> indexService.alterIndexProperties(this.getRpcStub(), request));
     }
@@ -1145,6 +1248,8 @@ public class MilvusClientV2 {
      *
      * @param request drop index properties request
      */
+    
+
     public void dropIndexProperties(DropIndexPropertiesReq request) {
         rpcUtils.retry(() -> indexService.dropIndexProperties(this.getRpcStub(), request));
     }
@@ -1155,6 +1260,8 @@ public class MilvusClientV2 {
      * @param request describe index request
      * @return DescribeIndexResp
      */
+    
+
     public DescribeIndexResp describeIndex(DescribeIndexReq request) {
         return rpcUtils.retry(() -> indexService.describeIndex(this.getRpcStub(), request));
     }
@@ -1165,6 +1272,8 @@ public class MilvusClientV2 {
      * @param request list indexes request
      * @return List of String names of the indexes
      */
+    
+
     public List<String> listIndexes(ListIndexesReq request) {
         return rpcUtils.retry(() -> indexService.listIndexes(this.getRpcStub(), request));
     }
@@ -1178,6 +1287,7 @@ public class MilvusClientV2 {
      * @param request insert request
      * @return InsertResp
      */
+    
     public InsertResp insert(InsertReq request) {
         String collection = request == null ? "" : request.getCollectionName();
         return recordLogicalOperation("Insert", collection,
@@ -1190,6 +1300,8 @@ public class MilvusClientV2 {
      * @param request upsert request
      * @return UpsertResp
      */
+    
+
     public UpsertResp upsert(UpsertReq request) {
         String collection = request == null ? "" : request.getCollectionName();
         return recordLogicalOperation("Upsert", collection,
@@ -1202,6 +1314,8 @@ public class MilvusClientV2 {
      * @param request delete request
      * @return DeleteResp
      */
+    
+
     public DeleteResp delete(DeleteReq request) {
         String collection = request == null ? "" : request.getCollectionName();
         return recordLogicalOperation("Delete", collection,
@@ -1214,6 +1328,8 @@ public class MilvusClientV2 {
      * @param request get request
      * @return GetResp
      */
+    
+
     public GetResp get(GetReq request) {
         return get(request, null);
     }
@@ -1230,6 +1346,8 @@ public class MilvusClientV2 {
      * @param request get request
      * @return a future completed with GetResp, or exceptionally when the operation fails
      */
+    
+
     public CompletableFuture<GetResp> getAsync(GetReq request) {
         return getAsync(request, null);
     }
@@ -1248,6 +1366,8 @@ public class MilvusClientV2 {
      * @param request query request
      * @return QueryResp
      */
+    
+
     public QueryResp query(QueryReq request) {
         return query(request, null);
     }
@@ -1264,6 +1384,8 @@ public class MilvusClientV2 {
      * @param request query request
      * @return a future completed with QueryResp, or exceptionally when the operation fails
      */
+    
+
     public CompletableFuture<QueryResp> queryAsync(QueryReq request) {
         return queryAsync(request, null);
     }
@@ -1282,6 +1404,8 @@ public class MilvusClientV2 {
      * @param request search request
      * @return SearchResp
      */
+    
+
     public SearchResp search(SearchReq request) {
         return search(request, null);
     }
@@ -1298,6 +1422,8 @@ public class MilvusClientV2 {
      * @param request search request
      * @return a future completed with SearchResp, or exceptionally when the operation fails
      */
+    
+
     public CompletableFuture<SearchResp> searchAsync(SearchReq request) {
         return searchAsync(request, null);
     }
@@ -1316,6 +1442,8 @@ public class MilvusClientV2 {
      * @param request search request
      * @return SearchResp
      */
+    
+
     public SearchResp hybridSearch(HybridSearchReq request) {
         return hybridSearch(request, null);
     }
@@ -1332,6 +1460,8 @@ public class MilvusClientV2 {
      * @param request hybrid search request
      * @return a future completed with SearchResp, or exceptionally when the operation fails
      */
+    
+
     public CompletableFuture<SearchResp> hybridSearchAsync(HybridSearchReq request) {
         return hybridSearchAsync(request, null);
     }
@@ -1351,6 +1481,8 @@ public class MilvusClientV2 {
      * @param request query iterator request
      * @return QueryIterator
      */
+    
+
     public QueryIterator queryIterator(QueryIteratorReq request) {
         return queryIterator(request, null);
     }
@@ -1366,6 +1498,8 @@ public class MilvusClientV2 {
      * @param request search iterator request
      * @return SearchIterator
      */
+    
+
     public SearchIterator searchIterator(SearchIteratorReq request) {
         return searchIterator(request, null);
     }
@@ -1381,6 +1515,8 @@ public class MilvusClientV2 {
      * @param request search iterator request V2
      * @return SearchIteratorV2
      */
+    
+
     public SearchIteratorV2 searchIteratorV2(SearchIteratorReqV2 request) {
         return searchIteratorV2(request, null);
     }
@@ -1405,6 +1541,8 @@ public class MilvusClientV2 {
      * @param request run analyzer request
      * @return RunAnalyzerResp
      */
+    
+
     public RunAnalyzerResp runAnalyzer(RunAnalyzerReq request) {
         return recordLogicalOperation("RunAnalyzer", "",
                 () -> rpcUtils.retry(() -> vectorService.runAnalyzer(this.getRpcStub(), request)));
@@ -1418,6 +1556,7 @@ public class MilvusClientV2 {
      *
      * @param request create partition request
      */
+    
     public void createPartition(CreatePartitionReq request) {
         rpcUtils.retry(() -> partitionService.createPartition(this.getRpcStub(), request));
     }
@@ -1427,6 +1566,8 @@ public class MilvusClientV2 {
      *
      * @param request drop partition request
      */
+    
+
     public void dropPartition(DropPartitionReq request) {
         rpcUtils.retry(() -> partitionService.dropPartition(this.getRpcStub(), request));
     }
@@ -1437,6 +1578,8 @@ public class MilvusClientV2 {
      * @param request has partition request
      * @return Boolean
      */
+    
+
     public Boolean hasPartition(HasPartitionReq request) {
         return rpcUtils.retry(() -> partitionService.hasPartition(this.getRpcStub(), request));
     }
@@ -1447,6 +1590,8 @@ public class MilvusClientV2 {
      * @param request list partitions request
      * @return List of String partition names
      */
+    
+
     public List<String> listPartitions(ListPartitionsReq request) {
         return rpcUtils.retry(() -> partitionService.listPartitions(this.getRpcStub(), request));
     }
@@ -1457,6 +1602,8 @@ public class MilvusClientV2 {
      * @param request get partition stats request
      * @return GetPartitionStatsResp
      */
+    
+
     public GetPartitionStatsResp getPartitionStats(GetPartitionStatsReq request) {
         return rpcUtils.retry(() -> partitionService.getPartitionStats(this.getRpcStub(), request));
     }
@@ -1466,6 +1613,8 @@ public class MilvusClientV2 {
      *
      * @param request load partitions request
      */
+    
+
     public void loadPartitions(LoadPartitionsReq request) {
         rpcUtils.retry(() -> partitionService.loadPartitions(this.getRpcStub(), request));
     }
@@ -1475,6 +1624,8 @@ public class MilvusClientV2 {
      *
      * @param request release partitions request
      */
+    
+
     public void releasePartitions(ReleasePartitionsReq request) {
         rpcUtils.retry(() -> partitionService.releasePartitions(this.getRpcStub(), request));
     }
@@ -1487,6 +1638,7 @@ public class MilvusClientV2 {
      *
      * @return List of String usernames
      */
+    
     public List<String> listUsers() {
         return rpcUtils.retry(() -> rbacService.listUsers(this.getRpcStub()));
     }
@@ -1497,6 +1649,8 @@ public class MilvusClientV2 {
      * @param request describe user request
      * @return DescribeUserResp
      */
+    
+
     public DescribeUserResp describeUser(DescribeUserReq request) {
         return rpcUtils.retry(() -> rbacService.describeUser(this.getRpcStub(), request));
     }
@@ -1506,6 +1660,8 @@ public class MilvusClientV2 {
      *
      * @param request create user request
      */
+    
+
     public void createUser(CreateUserReq request) {
         rpcUtils.retry(() -> rbacService.createUser(this.getRpcStub(), request));
     }
@@ -1515,6 +1671,8 @@ public class MilvusClientV2 {
      *
      * @param request change password request
      */
+    
+
     public void updatePassword(UpdatePasswordReq request) {
         rpcUtils.retry(() -> rbacService.updatePassword(this.getRpcStub(), request));
         if (Boolean.TRUE.equals(request.getResetConnection()) && connectConfig != null) {
@@ -1531,6 +1689,8 @@ public class MilvusClientV2 {
      *
      * @param request update user request
      */
+    
+
     public void updateUser(UpdateUserReq request) {
         rpcUtils.retry(() -> rbacService.updateUser(this.getRpcStub(), request));
     }
@@ -1540,6 +1700,8 @@ public class MilvusClientV2 {
      *
      * @param request drop user request
      */
+    
+
     public void dropUser(DropUserReq request) {
         rpcUtils.retry(() -> rbacService.dropUser(this.getRpcStub(), request));
     }
@@ -1550,6 +1712,8 @@ public class MilvusClientV2 {
      *
      * @return List of String role names
      */
+    
+
     public List<String> listRoles() {
         return rpcUtils.retry(() -> rbacService.listRoles(this.getRpcStub()));
     }
@@ -1560,6 +1724,8 @@ public class MilvusClientV2 {
      * @param request describe role request
      * @return DescribeRoleResp
      */
+    
+
     public DescribeRoleResp describeRole(DescribeRoleReq request) {
         return rpcUtils.retry(() -> rbacService.describeRole(this.getRpcStub(), request));
     }
@@ -1569,6 +1735,8 @@ public class MilvusClientV2 {
      *
      * @param request create role request
      */
+    
+
     public void createRole(CreateRoleReq request) {
         rpcUtils.retry(() -> rbacService.createRole(this.getRpcStub(), request));
     }
@@ -1578,6 +1746,8 @@ public class MilvusClientV2 {
      *
      * @param request alter role request
      */
+    
+
     public void alterRole(AlterRoleReq request) {
         rpcUtils.retry(() -> rbacService.alterRole(this.getRpcStub(), request));
     }
@@ -1587,6 +1757,8 @@ public class MilvusClientV2 {
      *
      * @param request drop role request
      */
+    
+
     public void dropRole(DropRoleReq request) {
         rpcUtils.retry(() -> rbacService.dropRole(this.getRpcStub(), request));
     }
@@ -1596,6 +1768,8 @@ public class MilvusClientV2 {
      *
      * @param request grant privilege request
      */
+    
+
     public void grantPrivilege(GrantPrivilegeReq request) {
         rpcUtils.retry(() -> rbacService.grantPrivilege(this.getRpcStub(), request));
     }
@@ -1605,6 +1779,8 @@ public class MilvusClientV2 {
      *
      * @param request revoke privilege request
      */
+    
+
     public void revokePrivilege(RevokePrivilegeReq request) {
         rpcUtils.retry(() -> rbacService.revokePrivilege(this.getRpcStub(), request));
     }
@@ -1614,6 +1790,8 @@ public class MilvusClientV2 {
      *
      * @param request grant role request
      */
+    
+
     public void grantRole(GrantRoleReq request) {
         rpcUtils.retry(() -> rbacService.grantRole(this.getRpcStub(), request));
     }
@@ -1623,9 +1801,18 @@ public class MilvusClientV2 {
      *
      * @param request revoke role request
      */
+    
+
     public void revokeRole(RevokeRoleReq request) {
         rpcUtils.retry(() -> rbacService.revokeRole(this.getRpcStub(), request));
     }
+
+    /**
+     * create privilege group
+     *
+     * @param request create privilege group request
+     */
+    
 
     public void createPrivilegeGroup(CreatePrivilegeGroupReq request) {
         rpcUtils.retry(() -> rbacService.createPrivilegeGroup(this.getRpcStub(), request));
@@ -1636,6 +1823,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link DropPrivilegeGroupReq}
      */
+    
+
     public void dropPrivilegeGroup(DropPrivilegeGroupReq request) {
         rpcUtils.retry(() -> rbacService.dropPrivilegeGroup(this.getRpcStub(), request));
     }
@@ -1646,6 +1835,8 @@ public class MilvusClientV2 {
      * @param request {@link ListPrivilegeGroupsReq}
      * @return {@link ListPrivilegeGroupsResp}
      */
+    
+
     public ListPrivilegeGroupsResp listPrivilegeGroups(ListPrivilegeGroupsReq request) {
         return rpcUtils.retry(() -> rbacService.listPrivilegeGroups(this.getRpcStub(), request));
     }
@@ -1655,6 +1846,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link AddPrivilegesToGroupReq}
      */
+    
+
     public void addPrivilegesToGroup(AddPrivilegesToGroupReq request) {
         rpcUtils.retry(() -> rbacService.addPrivilegesToGroup(this.getRpcStub(), request));
     }
@@ -1664,6 +1857,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link RemovePrivilegesFromGroupReq}
      */
+    
+
     public void removePrivilegesFromGroup(RemovePrivilegesFromGroupReq request) {
         rpcUtils.retry(() -> rbacService.removePrivilegesFromGroup(this.getRpcStub(), request));
     }
@@ -1673,6 +1868,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link GrantPrivilegeReqV2}
      */
+    
+
     public void grantPrivilegeV2(GrantPrivilegeReqV2 request) {
         rpcUtils.retry(() -> rbacService.grantPrivilegeV2(this.getRpcStub(), request));
     }
@@ -1682,6 +1879,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link RevokePrivilegeReqV2}
      */
+    
+
     public void revokePrivilegeV2(RevokePrivilegeReqV2 request) {
         rpcUtils.retry(() -> rbacService.revokePrivilegeV2(this.getRpcStub(), request));
     }
@@ -1694,6 +1893,7 @@ public class MilvusClientV2 {
      *
      * @param request {@link CreateResourceGroupReq}
      */
+    
     public void createResourceGroup(CreateResourceGroupReq request) {
         rpcUtils.retry(() -> rgroupService.createResourceGroup(this.getRpcStub(), request));
     }
@@ -1703,6 +1903,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link UpdateResourceGroupsReq}
      */
+    
+
     public void updateResourceGroups(UpdateResourceGroupsReq request) {
         rpcUtils.retry(() -> rgroupService.updateResourceGroups(this.getRpcStub(), request));
     }
@@ -1712,6 +1914,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link DropResourceGroupReq}
      */
+    
+
     public void dropResourceGroup(DropResourceGroupReq request) {
         rpcUtils.retry(() -> rgroupService.dropResourceGroup(this.getRpcStub(), request));
     }
@@ -1722,6 +1926,8 @@ public class MilvusClientV2 {
      * @param request {@link ListResourceGroupsReq}
      * @return ListResourceGroupsResp
      */
+    
+
     public ListResourceGroupsResp listResourceGroups(ListResourceGroupsReq request) {
         return rpcUtils.retry(() -> rgroupService.listResourceGroups(this.getRpcStub(), request));
     }
@@ -1732,6 +1938,8 @@ public class MilvusClientV2 {
      * @param request {@link DescribeResourceGroupReq}
      * @return DescribeResourceGroupResp
      */
+    
+
     public DescribeResourceGroupResp describeResourceGroup(DescribeResourceGroupReq request) {
         return rpcUtils.retry(() -> rgroupService.describeResourceGroup(this.getRpcStub(), request));
     }
@@ -1741,6 +1949,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link TransferNodeReq}
      */
+    
+
     public void transferNode(TransferNodeReq request) {
         rpcUtils.retry(() -> rgroupService.transferNode(this.getRpcStub(), request));
     }
@@ -1750,6 +1960,8 @@ public class MilvusClientV2 {
      *
      * @param request {@link TransferReplicaReq}
      */
+    
+
     public void transferReplica(TransferReplicaReq request) {
         rpcUtils.retry(() -> rgroupService.transferReplica(this.getRpcStub(), request));
     }
@@ -1762,6 +1974,7 @@ public class MilvusClientV2 {
      *
      * @param request create snapshot request
      */
+    
     public void createSnapshot(CreateSnapshotReq request) {
         rpcUtils.retry(() -> snapshotService.createSnapshot(this.getRpcStub(), request));
     }
@@ -1771,6 +1984,8 @@ public class MilvusClientV2 {
      *
      * @param request drop snapshot request
      */
+    
+
     public void dropSnapshot(DropSnapshotReq request) {
         rpcUtils.retry(() -> snapshotService.dropSnapshot(this.getRpcStub(), request));
     }
@@ -1781,6 +1996,8 @@ public class MilvusClientV2 {
      * @param request list snapshots request
      * @return ListSnapshotsResp
      */
+    
+
     public ListSnapshotsResp listSnapshots(ListSnapshotsReq request) {
         return rpcUtils.retry(() -> snapshotService.listSnapshots(this.getRpcStub(), request));
     }
@@ -1791,6 +2008,8 @@ public class MilvusClientV2 {
      * @param request describe snapshot request
      * @return DescribeSnapshotResp
      */
+    
+
     public DescribeSnapshotResp describeSnapshot(DescribeSnapshotReq request) {
         return rpcUtils.retry(() -> snapshotService.describeSnapshot(this.getRpcStub(), request));
     }
@@ -1801,6 +2020,8 @@ public class MilvusClientV2 {
      * @param request restore snapshot request
      * @return RestoreSnapshotResp containing the restore job ID
      */
+    
+
     public RestoreSnapshotResp restoreSnapshot(RestoreSnapshotReq request) {
         return rpcUtils.retry(() -> snapshotService.restoreSnapshot(this.getRpcStub(), request));
     }
@@ -1811,6 +2032,8 @@ public class MilvusClientV2 {
      * @param request get restore snapshot state request
      * @return GetRestoreSnapshotStateResp
      */
+    
+
     public GetRestoreSnapshotStateResp getRestoreSnapshotState(GetRestoreSnapshotStateReq request) {
         return rpcUtils.retry(() -> snapshotService.getRestoreSnapshotState(this.getRpcStub(), request));
     }
@@ -1821,6 +2044,8 @@ public class MilvusClientV2 {
      * @param request list restore snapshot jobs request
      * @return ListRestoreSnapshotJobsResp
      */
+    
+
     public ListRestoreSnapshotJobsResp listRestoreSnapshotJobs(ListRestoreSnapshotJobsReq request) {
         return rpcUtils.retry(() -> snapshotService.listRestoreSnapshotJobs(this.getRpcStub(), request));
     }
@@ -1831,6 +2056,8 @@ public class MilvusClientV2 {
      * @param request pin snapshot data request
      * @return PinSnapshotDataResp containing the pin ID
      */
+    
+
     public PinSnapshotDataResp pinSnapshotData(PinSnapshotDataReq request) {
         return rpcUtils.retry(() -> snapshotService.pinSnapshotData(this.getRpcStub(), request));
     }
@@ -1840,6 +2067,8 @@ public class MilvusClientV2 {
      *
      * @param request unpin snapshot data request
      */
+    
+
     public void unpinSnapshotData(UnpinSnapshotDataReq request) {
         rpcUtils.retry(() -> snapshotService.unpinSnapshotData(this.getRpcStub(), request));
     }
@@ -1852,6 +2081,7 @@ public class MilvusClientV2 {
      *
      * @param request create alias request
      */
+    
     public void createAlias(CreateAliasReq request) {
         rpcUtils.retry(() -> utilityService.createAlias(this.getRpcStub(), request));
     }
@@ -1861,6 +2091,8 @@ public class MilvusClientV2 {
      *
      * @param request drop alias request
      */
+    
+
     public void dropAlias(DropAliasReq request) {
         rpcUtils.retry(() -> utilityService.dropAlias(this.getRpcStub(), request));
     }
@@ -1870,6 +2102,8 @@ public class MilvusClientV2 {
      *
      * @param request alter alias request
      */
+    
+
     public void alterAlias(AlterAliasReq request) {
         rpcUtils.retry(() -> utilityService.alterAlias(this.getRpcStub(), request));
     }
@@ -1880,6 +2114,8 @@ public class MilvusClientV2 {
      * @param request list aliases request
      * @return List of String alias names
      */
+    
+
     public ListAliasResp listAliases(ListAliasesReq request) {
         return rpcUtils.retry(() -> utilityService.listAliases(this.getRpcStub(), request));
     }
@@ -1890,6 +2126,8 @@ public class MilvusClientV2 {
      * @param request describe alias request
      * @return DescribeAliasResp
      */
+    
+
     public DescribeAliasResp describeAlias(DescribeAliasReq request) {
         return rpcUtils.retry(() -> utilityService.describeAlias(this.getRpcStub(), request));
     }
@@ -1899,6 +2137,8 @@ public class MilvusClientV2 {
      *
      * @param request flush request
      */
+    
+
     public void flush(FlushReq request) {
         FlushResp response = rpcUtils.retry(() -> utilityService.flush(this.getRpcStub(), request));
 
@@ -1919,6 +2159,8 @@ public class MilvusClientV2 {
      * @param request flush all request
      * @return FlushAllResp
      */
+    
+
     public FlushAllResp flushAll(FlushAllReq request) {
         FlushAllResp response = rpcUtils.retry(() -> utilityService.flushAll(this.getRpcStub(), request));
 
@@ -1937,6 +2179,8 @@ public class MilvusClientV2 {
      * @param request get flush all state request
      * @return GetFlushAllStateResp
      */
+    
+
     public GetFlushAllStateResp getFlushAllState(GetFlushAllStateReq request) {
         return rpcUtils.retry(() -> utilityService.getFlushAllState(this.getRpcStub(), request));
     }
@@ -1948,6 +2192,8 @@ public class MilvusClientV2 {
      * @param request get request
      * @return GetPersistentSegmentInfoResp
      */
+    
+
     public GetPersistentSegmentInfoResp getPersistentSegmentInfo(GetPersistentSegmentInfoReq request) {
         return rpcUtils.retry(() -> utilityService.getPersistentSegmentInfo(this.getRpcStub(), request));
     }
@@ -1959,6 +2205,8 @@ public class MilvusClientV2 {
      * @param request get request
      * @return GetQuerySegmentInfoResp
      */
+    
+
     public GetQuerySegmentInfoResp getQuerySegmentInfo(GetQuerySegmentInfoReq request) {
         return rpcUtils.retry(() -> utilityService.getQuerySegmentInfo(this.getRpcStub(), request));
     }
@@ -1969,6 +2217,8 @@ public class MilvusClientV2 {
      * @param request compact request
      * @return CompactResp
      */
+    
+
     public CompactResp compact(CompactReq request) {
         return rpcUtils.retry(() -> utilityService.compact(this.getRpcStub(), request));
     }
@@ -1979,6 +2229,8 @@ public class MilvusClientV2 {
      * @param request get compact state request
      * @return GetCompactStateResp
      */
+    
+
     public GetCompactionStateResp getCompactionState(GetCompactionStateReq request) {
         return rpcUtils.retry(() -> utilityService.getCompactionState(this.getRpcStub(), request));
     }
@@ -1989,6 +2241,8 @@ public class MilvusClientV2 {
      * @param request get compact plans request
      * @return GetCompactPlansResp
      */
+    
+
     public GetCompactionPlansResp getCompactionPlans(GetCompactionPlansReq request) {
         return rpcUtils.retry(() -> utilityService.getCompactionPlans(this.getRpcStub(), request));
     }
@@ -1999,6 +2253,8 @@ public class MilvusClientV2 {
      * @param request refresh external collection request
      * @return RefreshExternalCollectionResp containing the job ID
      */
+    
+
     public RefreshExternalCollectionResp refreshExternalCollection(RefreshExternalCollectionReq request) {
         return rpcUtils.retry(() -> utilityService.refreshExternalCollection(this.getRpcStub(), request));
     }
@@ -2009,6 +2265,8 @@ public class MilvusClientV2 {
      * @param request get refresh progress request containing the job ID
      * @return GetRefreshExternalCollectionProgressResp containing the job info
      */
+    
+
     public GetRefreshExternalCollectionProgressResp getRefreshExternalCollectionProgress(GetRefreshExternalCollectionProgressReq request) {
         return rpcUtils.retry(() -> utilityService.getRefreshExternalCollectionProgress(this.getRpcStub(), request));
     }
@@ -2019,6 +2277,8 @@ public class MilvusClientV2 {
      * @param request list refresh jobs request
      * @return ListRefreshExternalCollectionJobsResp containing the list of job infos
      */
+    
+
     public ListRefreshExternalCollectionJobsResp listRefreshExternalCollectionJobs(ListRefreshExternalCollectionJobsReq request) {
         return rpcUtils.retry(() -> utilityService.listRefreshExternalCollectionJobs(this.getRpcStub(), request));
     }
@@ -2028,6 +2288,8 @@ public class MilvusClientV2 {
      *
      * @param request add file resource request containing name and path
      */
+    
+
     public void addFileResource(AddFileResourceReq request) {
         rpcUtils.retry(() -> utilityService.addFileResource(this.getRpcStub(), request));
     }
@@ -2037,6 +2299,8 @@ public class MilvusClientV2 {
      *
      * @param request remove file resource request containing name
      */
+    
+
     public void removeFileResource(RemoveFileResourceReq request) {
         rpcUtils.retry(() -> utilityService.removeFileResource(this.getRpcStub(), request));
     }
@@ -2047,6 +2311,8 @@ public class MilvusClientV2 {
      * @param request list file resources request
      * @return ListFileResourcesResp containing the list of file resources
      */
+    
+
     public ListFileResourcesResp listFileResources(ListFileResourcesReq request) {
         return rpcUtils.retry(() -> utilityService.listFileResources(this.getRpcStub(), request));
     }
@@ -2057,6 +2323,8 @@ public class MilvusClientV2 {
      * @param request dump messages request
      * @return DumpMessagesResp containing a lazy stream of dumped messages
      */
+    
+
     public DumpMessagesResp dumpMessages(DumpMessagesReq request) {
         return cdcService.dumpMessages(this.getRpcStub(), request);
     }
@@ -2074,6 +2342,8 @@ public class MilvusClientV2 {
      * @param request optimize request
      * @return OptimizeTask for tracking progress and getting result
      */
+    
+
     public OptimizeTask optimize(OptimizeReq request) {
         OptimizeTask task = new OptimizeTask(
                 request.getCollectionName(),
@@ -2262,6 +2532,8 @@ public class MilvusClientV2 {
      *
      * @return String
      */
+    
+
     public String getServerVersion() {
         return rpcUtils.retry(() -> utilityService.getServerVersion(this.getRpcStub(),
                 GetServerVersionReq.builder().build()).getVersion());
@@ -2273,6 +2545,8 @@ public class MilvusClientV2 {
      * @param request get server version request
      * @return GetServerVersionResp
      */
+    
+
     public GetServerVersionResp getServerVersionV2(GetServerVersionReq request) {
         return rpcUtils.retry(() -> utilityService.getServerVersion(this.getRpcStub(), request));
     }
@@ -2282,9 +2556,19 @@ public class MilvusClientV2 {
      *
      * @return CheckHealthResp
      */
+    
+
     public CheckHealthResp checkHealth() {
         return rpcUtils.retry(() -> utilityService.checkHealth(this.getRpcStub()));
     }
+
+    /**
+     * Gets the replication info of the connected cluster.
+     *
+     * @param request {@link GetReplicateInfoReq}
+     * @return {@link GetReplicateInfoResp}
+     */
+    
 
     public GetReplicateInfoResp getReplicateInfo(GetReplicateInfoReq request) {
         return rpcUtils.retry(() -> cdcService.getReplicateInfo(this.getRpcStub(), request));
@@ -2295,6 +2579,8 @@ public class MilvusClientV2 {
      *
      * @return {@link GetReplicateConfigurationResp}
      */
+    
+
     public GetReplicateConfigurationResp getReplicateConfiguration() {
         return rpcUtils.retry(() -> cdcService.getReplicateConfiguration(this.getRpcStub()));
     }
@@ -2305,6 +2591,8 @@ public class MilvusClientV2 {
      * @param request {@link UpdateReplicateConfigurationReq}
      * @return {@link UpdateReplicateConfigurationResp}
      */
+    
+
     public UpdateReplicateConfigurationResp updateReplicateConfiguration(UpdateReplicateConfigurationReq request) {
         return rpcUtils.retry(() -> cdcService.updateReplicateConfiguration(this.getRpcStub(), request));
     }
@@ -2315,6 +2603,8 @@ public class MilvusClientV2 {
      * @param maxWaitSeconds max wait seconds
      * @throws InterruptedException throws InterruptedException if the client failed to close connection
      */
+    
+
     public void close(long maxWaitSeconds) throws InterruptedException {
         // cancel any pending async retries and release the per-client retry scheduler
         rpcUtils.shutdown();
@@ -2346,6 +2636,8 @@ public class MilvusClientV2 {
      * Disconnects from a Milvus server with timeout of 1 second
      *
      */
+    
+
     public void close() {
         try {
             close(TimeUnit.MINUTES.toSeconds(1));
@@ -2359,6 +2651,8 @@ public class MilvusClientV2 {
      *
      * @return true if the underlying channel is open and usable
      */
+    
+
     public boolean clientIsReady() {
         if (globalStub != null) {
             MilvusClientV2 primaryClient = globalStub.getPrimaryClient();

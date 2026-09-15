@@ -74,6 +74,13 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+/**
+ * Abstract base class for the V1 gRPC client. It provides common implementations
+ * of the {@link MilvusClient} methods, covering collection, index, partition, DML,
+ * DQL, RBAC, resource group and other operations.
+ */
+
+
 public abstract class AbstractMilvusGrpcClient implements MilvusClient {
 
     protected static final Logger logger = LoggerFactory.getLogger(AbstractMilvusGrpcClient.class);
@@ -2622,6 +2629,14 @@ public abstract class AbstractMilvusGrpcClient implements MilvusClient {
     }
 
 
+    /**
+     * Creates a role with the given parameters.
+     *
+     * @param requestParam the requestParam
+     */
+    
+
+
     public R<RpcStatus> createRole(CreateRoleParam requestParam) {
         if (!clientIsReady()) {
             return R.failed(new ClientNotConnectedException("Client rpc channel is not ready"));
@@ -2650,6 +2665,14 @@ public abstract class AbstractMilvusGrpcClient implements MilvusClient {
     }
 
 
+    /**
+     * Drops a role with the given parameters.
+     *
+     * @param requestParam the requestParam
+     */
+    
+
+
     public R<RpcStatus> dropRole(DropRoleParam requestParam) {
         if (!clientIsReady()) {
             return R.failed(new ClientNotConnectedException("Client rpc channel is not ready"));
@@ -2675,6 +2698,14 @@ public abstract class AbstractMilvusGrpcClient implements MilvusClient {
             return R.failed(e);
         }
     }
+
+
+    /**
+     * Gets the role information with the given parameters.
+     *
+     * @param requestParam the requestParam
+     */
+    
 
 
     public R<SelectRoleResponse> selectRole(SelectRoleParam requestParam) {
@@ -2706,6 +2737,14 @@ public abstract class AbstractMilvusGrpcClient implements MilvusClient {
     }
 
 
+    /**
+     * Gets the user information with the given parameters.
+     *
+     * @param requestParam the requestParam
+     */
+    
+
+
     public R<SelectUserResponse> selectUser(SelectUserParam requestParam) {
         if (!clientIsReady()) {
             return R.failed(new ClientNotConnectedException("Client rpc channel is not ready"));
@@ -2731,6 +2770,14 @@ public abstract class AbstractMilvusGrpcClient implements MilvusClient {
             return R.failed(e);
         }
     }
+
+
+    /**
+     * Grants a privilege to a role with the given parameters.
+     *
+     * @param requestParam the requestParam
+     */
+    
 
 
     public R<RpcStatus> grantRolePrivilege(GrantRolePrivilegeParam requestParam) {
@@ -2769,6 +2816,13 @@ public abstract class AbstractMilvusGrpcClient implements MilvusClient {
         }
     }
 
+    /**
+     * Revokes a privilege from a role with the given parameters.
+     *
+     * @param requestParam the requestParam
+     */
+    
+
     public R<RpcStatus> revokeRolePrivilege(RevokeRolePrivilegeParam requestParam) {
         if (!clientIsReady()) {
             return R.failed(new ClientNotConnectedException("Client rpc channel is not ready"));
@@ -2806,6 +2860,14 @@ public abstract class AbstractMilvusGrpcClient implements MilvusClient {
     }
 
 
+    /**
+     * Gets the privileges granted to a role with the given parameters.
+     *
+     * @param requestParam the requestParam
+     */
+    
+
+
     public R<SelectGrantResponse> selectGrantForRole(SelectGrantForRoleParam requestParam) {
         if (!clientIsReady()) {
             return R.failed(new ClientNotConnectedException("Client rpc channel is not ready"));
@@ -2837,6 +2899,13 @@ public abstract class AbstractMilvusGrpcClient implements MilvusClient {
             return R.failed(e);
         }
     }
+
+    /**
+     * Gets the privileges granted to a role on a specific object with the given parameters.
+     *
+     * @param requestParam the requestParam
+     */
+    
 
     public R<SelectGrantResponse> selectGrantForRoleAndObject(SelectGrantForRoleAndObjectParam requestParam) {
         if (!clientIsReady()) {

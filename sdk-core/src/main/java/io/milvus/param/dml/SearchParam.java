@@ -34,6 +34,8 @@ import java.util.SortedMap;
 /**
  * Parameters for <code>search</code> interface.
  */
+
+
 public class SearchParam {
     private String databaseName;
     private final String collectionName;
@@ -84,95 +86,255 @@ public class SearchParam {
         this.plType = builder.plType;
     }
 
+    /**
+     * Returns the databaseName.
+     *
+     * @return the databaseName
+     */
     // Getter methods to replace @Getter annotation
     public String getDatabaseName() {
         return databaseName;
     }
 
+    /**
+     * Returns the collectionName.
+     *
+     * @return the collectionName
+     */
+    
+
     public String getCollectionName() {
         return collectionName;
     }
+
+    /**
+     * Returns the partitionNames.
+     *
+     * @return the partitionNames
+     */
+    
 
     public List<String> getPartitionNames() {
         return partitionNames;
     }
 
+    /**
+     * Returns the metricType.
+     *
+     * @return the metricType
+     */
+    
+
     public String getMetricType() {
         return metricType;
     }
+
+    /**
+     * Returns the vectorFieldName.
+     *
+     * @return the vectorFieldName
+     */
+    
 
     public String getVectorFieldName() {
         return vectorFieldName;
     }
 
+    /**
+     * Returns the topK.
+     *
+     * @return the topK
+     */
+    
+
     public Long getTopK() {
         return topK;
     }
+
+    /**
+     * Returns the expr.
+     *
+     * @return the expr
+     */
+    
 
     public String getExpr() {
         return expr;
     }
 
+    /**
+     * Returns the outFields.
+     *
+     * @return the outFields
+     */
+    
+
     public List<String> getOutFields() {
         return outFields;
     }
+
+    /**
+     * Returns the vectors.
+     *
+     * @return the vectors
+     */
+    
 
     public List<?> getVectors() {
         return vectors;
     }
 
+    /**
+     * Returns the NQ.
+     *
+     * @return the NQ
+     */
+    
+
     public Long getNQ() {
         return NQ;
     }
+
+    /**
+     * Returns the roundDecimal.
+     *
+     * @return the roundDecimal
+     */
+    
 
     public int getRoundDecimal() {
         return roundDecimal;
     }
 
+    /**
+     * Returns the params.
+     *
+     * @return the params
+     */
+    
+
     public String getParams() {
         return params;
     }
+
+    /**
+     * Returns the travelTimestamp.
+     *
+     * @return the travelTimestamp
+     */
+    
 
     public long getTravelTimestamp() {
         return travelTimestamp;
     }
 
+    /**
+     * Returns the guaranteeTimestamp.
+     *
+     * @return the guaranteeTimestamp
+     */
+    
+
     public long getGuaranteeTimestamp() {
         return guaranteeTimestamp;
     }
+
+    /**
+     * Returns the gracefulTime.
+     *
+     * @return the gracefulTime
+     */
+    
 
     public Long getGracefulTime() {
         return gracefulTime;
     }
 
+    /**
+     * Returns the consistencyLevel.
+     *
+     * @return the consistencyLevel
+     */
+    
+
     public ConsistencyLevelEnum getConsistencyLevel() {
         return consistencyLevel;
     }
+
+    /**
+     * Returns the ignoreGrowing.
+     *
+     * @return the ignoreGrowing
+     */
+    
 
     public boolean isIgnoreGrowing() {
         return ignoreGrowing;
     }
 
+    /**
+     * Returns the groupByFieldName.
+     *
+     * @return the groupByFieldName
+     */
+    
+
     public String getGroupByFieldName() {
         return groupByFieldName;
     }
+
+    /**
+     * Returns the groupSize.
+     *
+     * @return the groupSize
+     */
+    
 
     public Integer getGroupSize() {
         return groupSize;
     }
 
+    /**
+     * Returns the strictGroupSize.
+     *
+     * @return the strictGroupSize
+     */
+    
+
     public Boolean getStrictGroupSize() {
         return strictGroupSize;
     }
+
+    /**
+     * Returns the plType.
+     *
+     * @return the plType
+     */
+    
 
     public PlaceholderType getPlType() {
         return plType;
     }
 
+    /**
+     * Sets the databaseName.
+     *
+     * @param databaseName the databaseName
+     */
     // Setter method to replace @Setter annotation
+
+    /** Sets the databaseName. */    
+
     public void setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
     }
+
+    /**
+     * Creates a new builder.
+     *
+     * @return the builder
+     */
+    
 
     public static Builder newBuilder() {
         return new Builder();
@@ -181,6 +343,8 @@ public class SearchParam {
     /**
      * Builder for {@link SearchParam} class.
      */
+    
+
     public static class Builder {
         private String databaseName;
         private String collectionName;
@@ -217,6 +381,8 @@ public class SearchParam {
          * @param databaseName database name
          * @return <code>Builder</code>
          */
+        
+
         public Builder withDatabaseName(String databaseName) {
             this.databaseName = databaseName;
             return this;
@@ -228,6 +394,8 @@ public class SearchParam {
          * @param collectionName collection name
          * @return <code>Builder</code>
          */
+        
+
         public Builder withCollectionName(String collectionName) {
             if (collectionName == null) {
                 throw new IllegalArgumentException("collectionName cannot be null");
@@ -242,6 +410,8 @@ public class SearchParam {
          * @param partitionNames partition names list
          * @return <code>Builder</code>
          */
+        
+
         public Builder withPartitionNames(List<String> partitionNames) {
             if (partitionNames == null) {
                 throw new IllegalArgumentException("partitionNames cannot be null");
@@ -256,6 +426,8 @@ public class SearchParam {
          * @param consistencyLevel consistency level
          * @return <code>Builder</code>
          */
+        
+
         public Builder withConsistencyLevel(ConsistencyLevelEnum consistencyLevel) {
             this.consistencyLevel = consistencyLevel;
             return this;
@@ -267,6 +439,8 @@ public class SearchParam {
          * @param partitionName partition name
          * @return <code>Builder</code>
          */
+        
+
         public Builder addPartitionName(String partitionName) {
             if (partitionName == null) {
                 throw new IllegalArgumentException("partitionName cannot be null");
@@ -283,6 +457,8 @@ public class SearchParam {
          * @param metricType metric type
          * @return <code>Builder</code>
          */
+        
+
         public Builder withMetricType(MetricType metricType) {
             if (metricType == null) {
                 throw new IllegalArgumentException("metricType cannot be null");
@@ -297,6 +473,8 @@ public class SearchParam {
          * @param vectorFieldName vector field name
          * @return <code>Builder</code>
          */
+        
+
         public Builder withVectorFieldName(String vectorFieldName) {
             if (vectorFieldName == null) {
                 throw new IllegalArgumentException("vectorFieldName cannot be null");
@@ -321,6 +499,14 @@ public class SearchParam {
             return this;
         }
 
+        /**
+         * Sets the limit.
+         *
+         * @param limit the limit
+         * @return this builder
+         */
+        
+
         public Builder withLimit(Long limit) {
             if (limit == null) {
                 throw new IllegalArgumentException("limit cannot be null");
@@ -336,6 +522,8 @@ public class SearchParam {
          * @return <code>Builder</code>
          * @see <a href="https://milvus.io/docs/v2.0.0/boolean.md">Boolean Expression Rules</a>
          */
+        
+
         public Builder withExpr(String expr) {
             if (expr == null) {
                 throw new IllegalArgumentException("expr cannot be null");
@@ -350,6 +538,8 @@ public class SearchParam {
          * @param outFields output fields
          * @return <code>Builder</code>
          */
+        
+
         public Builder withOutFields(List<String> outFields) {
             if (outFields == null) {
                 throw new IllegalArgumentException("outFields cannot be null");
@@ -364,6 +554,8 @@ public class SearchParam {
          * @param fieldName filed name
          * @return <code>Builder</code>
          */
+        
+
         public Builder addOutField(String fieldName) {
             if (fieldName == null) {
                 throw new IllegalArgumentException("fieldName cannot be null");
@@ -403,6 +595,8 @@ public class SearchParam {
          * @param vectors target vectors to search
          * @return <code>Builder</code>
          */
+        
+
         public Builder withFloatVectors(List<List<Float>> vectors) {
             if (vectors == null) {
                 throw new IllegalArgumentException("vectors cannot be null");
@@ -419,6 +613,8 @@ public class SearchParam {
          * @param vectors target vectors to search
          * @return <code>Builder</code>
          */
+        
+
         public Builder withBinaryVectors(List<ByteBuffer> vectors) {
             if (vectors == null) {
                 throw new IllegalArgumentException("vectors cannot be null");
@@ -435,6 +631,8 @@ public class SearchParam {
          * @param vectors target vectors to search
          * @return <code>Builder</code>
          */
+        
+
         public Builder withFloat16Vectors(List<ByteBuffer> vectors) {
             if (vectors == null) {
                 throw new IllegalArgumentException("vectors cannot be null");
@@ -451,6 +649,8 @@ public class SearchParam {
          * @param vectors target vectors to search
          * @return <code>Builder</code>
          */
+        
+
         public Builder withBFloat16Vectors(List<ByteBuffer> vectors) {
             if (vectors == null) {
                 throw new IllegalArgumentException("vectors cannot be null");
@@ -467,6 +667,8 @@ public class SearchParam {
          * @param vectors target vectors to search
          * @return <code>Builder</code>
          */
+        
+
         public Builder withSparseFloatVectors(List<SortedMap<Long, Float>> vectors) {
             if (vectors == null) {
                 throw new IllegalArgumentException("vectors cannot be null");
@@ -483,6 +685,8 @@ public class SearchParam {
          * @param decimal how many digits after the decimal point
          * @return <code>Builder</code>
          */
+        
+
         public Builder withRoundDecimal(Integer decimal) {
             if (decimal == null) {
                 throw new IllegalArgumentException("decimal cannot be null");
@@ -500,6 +704,8 @@ public class SearchParam {
          * @param params extra parameters in json format
          * @return <code>Builder</code>
          */
+        
+
         public Builder withParams(String params) {
             if (params == null) {
                 throw new IllegalArgumentException("params cannot be null");
@@ -515,6 +721,8 @@ public class SearchParam {
          * @param ignoreGrowing <code>Boolean.TRUE</code> ignore, Boolean.FALSE is not
          * @return <code>Builder</code>
          */
+        
+
         public Builder withIgnoreGrowing(Boolean ignoreGrowing) {
             if (ignoreGrowing == null) {
                 throw new IllegalArgumentException("ignoreGrowing cannot be null");
@@ -529,6 +737,8 @@ public class SearchParam {
          * @param groupByFieldName field name to do grouping
          * @return <code>Builder</code>
          */
+        
+
         public Builder withGroupByFieldName(String groupByFieldName) {
             if (groupByFieldName == null) {
                 throw new IllegalArgumentException("groupByFieldName cannot be null");
@@ -543,6 +753,8 @@ public class SearchParam {
          * @param groupSize the max number of items
          * @return <code>Builder</code>
          */
+        
+
         public Builder withGroupSize(Integer groupSize) {
             if (groupSize == null) {
                 throw new IllegalArgumentException("groupSize cannot be null");
@@ -558,6 +770,8 @@ public class SearchParam {
          * @param strictGroupSize whether to force the number of each group to be groupSize
          * @return <code>Builder</code>
          */
+        
+
         public Builder withStrictGroupSize(Boolean strictGroupSize) {
             if (strictGroupSize == null) {
                 throw new IllegalArgumentException("strictGroupSize cannot be null");
@@ -571,6 +785,8 @@ public class SearchParam {
          *
          * @return {@link SearchParam}
          */
+        
+
         public SearchParam build() throws ParamException {
             ParamUtils.CheckNullEmptyString(collectionName, "Collection name");
             ParamUtils.CheckNullEmptyString(vectorFieldName, "Target field name");
@@ -596,6 +812,13 @@ public class SearchParam {
             return new SearchParam(this);
         }
     }
+
+    /**
+     * Verifies the target vectors to ensure they are valid for search.
+     *
+     * @param vectors the target vectors to verify
+     */
+    
 
     public static void verifyVectors(List<?> vectors) {
         if (vectors == null || vectors.isEmpty()) {
