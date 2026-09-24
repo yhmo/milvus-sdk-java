@@ -24,10 +24,13 @@ import io.grpc.ClientCall;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.milvus.common.utils.cache.CollectionTsCache;
+import io.milvus.grpc.CompactionMergeInfo;
 import io.milvus.grpc.DescribeCollectionRequest;
 import io.milvus.grpc.DescribeCollectionResponse;
 import io.milvus.grpc.FlushAllRequest;
 import io.milvus.grpc.FlushAllResponse;
+import io.milvus.grpc.GetCompactionPlansRequest;
+import io.milvus.grpc.GetCompactionPlansResponse;
 import io.milvus.grpc.GetCompactionStateRequest;
 import io.milvus.grpc.GetCompactionStateResponse;
 import io.milvus.grpc.GetFlushAllStateRequest;
@@ -38,6 +41,7 @@ import io.milvus.grpc.Status;
 import io.milvus.support.v2.BaseTest;
 import io.milvus.v2.client.MilvusClientV2;
 import io.milvus.v2.common.CompactionState;
+import io.milvus.v2.exception.MilvusClientException;
 import io.milvus.v2.service.utility.OptimizeTask;
 import io.milvus.v2.service.utility.request.*;
 import io.milvus.v2.service.utility.response.*;
@@ -138,6 +142,46 @@ class UtilityTest extends BaseTest {
     }
 
     @Test
+    void testGetCompactionStateRejectsNullCompactionId() {
+        GetCompactionStateReq req = GetCompactionStateReq.builder().build();
+        assertThrows(MilvusClientException.class, () -> client_v2.getCompactionState(req));
+    }
+
+    @Test
+    void testGetCompactionPlansRejectsNullCompactionId() {
+        GetCompactionPlansReq req = GetCompactionPlansReq.builder().build();
+        assertThrows(MilvusClientException.class, () -> client_v2.getCompactionPlans(req));
+    }
+
+    @Test
+    void testListCompactionTasks() {
+        Status success = Status.newBuilder().setCode(0).build();
+        when(blockingStub.getCompactionStateWithPlans(any(GetCompactionPlansRequest.class)))
+                .thenReturn(GetCompactionPlansResponse.newBuilder()
+                        .setStatus(success)
+                        .setState(io.milvus.grpc.CompactionState.Completed)
+                        .addMergeInfos(CompactionMergeInfo.newBuilder()
+                                .setTarget(1L)
+                                .addSources(2L)
+                                .build())
+                        .build());
+
+        ListCompactionTasksReq req = ListCompactionTasksReq.builder()
+                .collectionName("test")
+                .build();
+        GetCompactionPlansResp resp = client_v2.listCompactionTasks(req);
+        assertEquals(CompactionState.Completed, resp.getState());
+        assertEquals(1, resp.getPlans().size());
+        assertEquals(1L, resp.getPlans().get(0).getTarget());
+        assertTrue(resp.getPlans().get(0).getSources().contains(2L));
+
+        ArgumentCaptor<GetCompactionPlansRequest> captor =
+                ArgumentCaptor.forClass(GetCompactionPlansRequest.class);
+        verify(blockingStub).getCompactionStateWithPlans(captor.capture());
+        assertEquals("test", captor.getValue().getCollectionName());
+    }
+
+    @Test
     void testRefreshExternalCollection() {
         JsonObject spec = new JsonObject();
         spec.addProperty("format", "parquet");
@@ -186,6 +230,7 @@ class UtilityTest extends BaseTest {
                 ArgumentCaptor.forClass(ManualCompactionRequest.class);
         verify(blockingStub).manualCompaction(captor.capture());
         assertEquals(2048L, captor.getValue().getTargetSize());
+        assertEquals("test", captor.getValue().getCollectionName());
     }
 
     @Test

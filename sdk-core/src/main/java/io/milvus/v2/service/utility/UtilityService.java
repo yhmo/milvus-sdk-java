@@ -272,6 +272,7 @@ public class UtilityService extends BaseService {
 
         ManualCompactionRequest.Builder builder = ManualCompactionRequest.newBuilder()
                 .setCollectionID(descResponse.getCollectionID())
+                .setCollectionName(request.getCollectionName())
                 .setMajorCompaction(request.getIsClustering())
                 .setL0Compaction(request.getIsL0());
         if (StringUtils.isNotEmpty(dbName)) {
@@ -299,6 +300,9 @@ public class UtilityService extends BaseService {
 
     public GetCompactionStateResp getCompactionState(MilvusServiceGrpc.MilvusServiceBlockingStub blockingStub,
                                                      GetCompactionStateReq request) {
+        if (request.getCompactionID() == null) {
+            throw new MilvusClientException(ErrorCode.INVALID_PARAMS, "Compaction ID cannot be null.");
+        }
         String title = "Get compaction state";
         GetCompactionStateRequest getRequest = GetCompactionStateRequest.newBuilder()
                 .setCompactionID(request.getCompactionID())
@@ -325,6 +329,9 @@ public class UtilityService extends BaseService {
 
     public GetCompactionPlansResp getCompactionPlans(MilvusServiceGrpc.MilvusServiceBlockingStub blockingStub,
                                                      GetCompactionPlansReq request) {
+        if (request.getCompactionID() == null) {
+            throw new MilvusClientException(ErrorCode.INVALID_PARAMS, "Compaction ID cannot be null.");
+        }
         String title = "Get compaction plans";
         GetCompactionPlansRequest getRequest = GetCompactionPlansRequest.newBuilder()
                 .setCompactionID(request.getCompactionID())
@@ -343,6 +350,46 @@ public class UtilityService extends BaseService {
 
         return GetCompactionPlansResp.builder()
                 .compactionId(request.getCompactionID())
+                .state(CompactionState.valueOf(response.getState().name()))
+                .plans(plans)
+                .build();
+    }
+
+    /**
+     * Lists all compaction tasks still retained for the specified collection, whether
+     * automatically or manually triggered. Terminal tasks are subject to server-side
+     * garbage collection and are not an audit log.
+     *
+     * @param blockingStub the gRPC blocking stub
+     * @param request the list compaction tasks request
+     * @return the compaction plans response
+     */
+
+
+    public GetCompactionPlansResp listCompactionTasks(MilvusServiceGrpc.MilvusServiceBlockingStub blockingStub,
+                                                      ListCompactionTasksReq request) {
+        String dbName = request.getDatabaseName();
+        String collectionName = request.getCollectionName();
+        String title = String.format("List compaction tasks of collection: '%s' in database: '%s'",
+                collectionName, dbName);
+        GetCompactionPlansRequest.Builder builder = GetCompactionPlansRequest.newBuilder()
+                .setCollectionName(collectionName);
+        if (StringUtils.isNotEmpty(dbName)) {
+            builder.setDbName(dbName);
+        }
+        GetCompactionPlansResponse response = blockingStub.getCompactionStateWithPlans(builder.build());
+        rpcUtils.handleResponse(title, response.getStatus());
+
+        List<CompactionPlan> plans = new ArrayList<>();
+        List<CompactionMergeInfo> infos = response.getMergeInfosList();
+        infos.forEach(info -> {
+            plans.add(CompactionPlan.builder()
+                    .target(info.getTarget())
+                    .sources(info.getSourcesList())
+                    .build());
+        });
+
+        return GetCompactionPlansResp.builder()
                 .state(CompactionState.valueOf(response.getState().name()))
                 .plans(plans)
                 .build();
